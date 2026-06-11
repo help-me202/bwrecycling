@@ -1,0 +1,16 @@
+.top-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f4f4f4;
+  padding: 10px 20px;
+}
+.banner-left-img img {
+  height: 60px; /* Adjust height to fit your specific logo */
+}
+.header-image-container img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
