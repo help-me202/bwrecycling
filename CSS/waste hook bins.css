@@ -1,0 +1,121 @@
+.hook-bins-container {
+    padding: 60px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.hook-bins-container h1 {
+    color: #000000;
+    font-size: 3.5rem;
+    text-decoration: underline;
+    text-decoration-color: #4a0638;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+}
+
+.tagline {
+    font-style: italic;
+    color: #555555;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+}
+
+.bin-types-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 30px 0 50px 0;
+}
+
+.bin-type-card {
+    background-color: #4a0638;
+    color: #ffffff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.content-split {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.image-gallery-left {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.text-content-right {
+    flex: 1.5;
+    min-width: 300px;
+}
+
+.image-gallery-left img {
+    width: 80%;
+    max-width: 350px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, z-index 0.3s ease;
+    position: relative;
+}
+
+/* Scatter effect using horizontal staggering and slight rotations */
+.image-gallery-left img:nth-child(1) {
+    transform: translateX(-15px) rotate(-3deg);
+}
+
+.image-gallery-left img:nth-child(2) {
+    transform: translateX(15px) rotate(2deg);
+}
+
+.image-gallery-left img:nth-child(3) {
+    transform: translateX(-10px) rotate(-1deg);
+}
+
+.image-gallery-left img:hover {
+    transform: translateX(0) scale(1.05) rotate(0deg);
+    z-index: 10;
+}
+
+.info-section {
+    text-align: left;
+}
+
+.info-section h2 {
+    color: #4a0638;
+    margin-bottom: 20px;
+}
+
+.considerations-list {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.considerations-list li {
+    margin-bottom: 12px;
+}
+
+.warning-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 25px;
+    border-left: 6px solid #f5c6cb;
+    margin-top: 40px;
+    text-align: left;
+    border-radius: 4px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
