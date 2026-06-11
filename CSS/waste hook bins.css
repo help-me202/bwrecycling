@@ -119,3 +119,9 @@
     font-size: 1.05rem;
     line-height: 1.6;
 }
+
+.warning-link {
+    color: #721c24;
+    font-weight: bold;
+    text-decoration: underline;
+}

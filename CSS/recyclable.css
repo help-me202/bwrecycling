@@ -1,0 +1,80 @@
+.recyclable-container {
+    padding: 60px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.recyclable-container h1 {
+    color: #000000;
+    font-size: 3.5rem;
+    text-decoration: underline;
+    text-decoration-color: #4a0638;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+    margin-bottom: 10px;
+}
+
+.recyclable-container h4 {
+    font-style: italic;
+    color: #666666;
+    /* Gray color */
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-weight: 400;
+}
+
+.chess-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 4px solid #4a0638;
+    border-radius: 8px;
+    overflow: hidden;
+    /* Keeps the border radius clean */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.chess-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: 200px;
+}
+
+/* Alternating colors for the checkerboard effect */
+.chess-item:nth-child(odd) {
+    background-color: #4a0638;
+    color: #ffffff;
+}
+
+.chess-item:nth-child(even) {
+    background-color: #ffffff;
+    color: #4a0638;
+}
+
+.chess-item.image-only {
+    padding: 0;
+    display: block;
+    overflow: hidden;
+}
+
+.chess-item.image-only img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.chess-item.image-only:hover img {
+    transform: scale(1.1);
+}
+
+/* On small screens, stack them vertically (which still alternates colors perfectly!) */
+@media (max-width: 768px) {
+    .chess-grid {
+        grid-template-columns: 1fr;
+    }
+}

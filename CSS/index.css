@@ -1,6 +1,13 @@
 body {
   margin: 0;
   font-family: 'Frank Ruhl Libre', serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-footer {
+  margin-top: auto;
 }
 
 .top-banner {
@@ -15,7 +22,7 @@ body {
 }
 
 .banner-left-img img {
-  height: 40px;
+  height: 55px;
   /* Adjust height to fit your specific logo */
 }
 
@@ -24,6 +31,7 @@ body {
   text-decoration: none;
   font-weight: bold;
   margin-left: 20px;
+  font-size: 0.9rem;
   transition: color 0.3s ease;
 }
 
@@ -70,7 +78,7 @@ body {
   background-color: #ffffff;
   padding: 60px 40px;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 0 auto 0 8%;
   border-radius: 8px;
   /* Slightly rounded corners */
   text-align: center;
