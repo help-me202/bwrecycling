@@ -6,9 +6,22 @@ const nodemailer = require("nodemailer");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse incoming form data and JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middleware to parse incoming form data and JSON and capture raw body for debugging
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      if (buf && buf.length) req.rawBody = buf.toString();
+    },
+  }),
+);
+app.use(
+  express.urlencoded({
+    extended: true,
+    verify: (req, res, buf) => {
+      if (buf && buf.length) req.rawBody = buf.toString();
+    },
+  }),
+);
 
 // Serve static assets (CSS and Images)
 app.use("/CSS", express.static(path.join(__dirname, "CSS")));
@@ -36,6 +49,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@biloelaplumbingworks.com";
+
 // Verify connection configuration on startup
 transporter.verify(function (error, success) {
   if (error) {
@@ -47,12 +62,29 @@ transporter.verify(function (error, success) {
 
 // Handle Contact Form Submission
 app.post("/submit-form", async (req, res) => {
+  if (!req.body || Object.keys(req.body).length === 0) {
+    console.error("Empty or malformed JSON body:", req.rawBody);
+    return res.status(400).json({
+      error: "Malformed request body. Please submit valid JSON.",
+      rawBody: req.rawBody,
+    });
+  }
+
   const { Name, Phone, Email, Message } = req.body;
+
+  console.log("Contact form submission:", {
+    Name,
+    Phone,
+    Email,
+    Message,
+    rawBody: req.rawBody,
+  });
 
   try {
     await transporter.sendMail({
       from: `"Website Contact Form" <${process.env.EMAIL_USER}>`, // Sender address
-      to: process.env.EMAIL_USER, // Where you want to receive the inquiries
+      to: ADMIN_EMAIL, // Send enquiries to the admin address
+      replyTo: Email,
       subject: `New Enquiry from ${Name}`,
       text: `Name: ${Name}\nPhone: ${Phone}\nEmail: ${Email}\n\nMessage:\n${Message}`,
     });
@@ -60,7 +92,9 @@ app.post("/submit-form", async (req, res) => {
     res.status(200).json({ message: "Email sent successfully!" });
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).json({ error: "Failed to send email." });
+    res.status(500).json({
+      error: error.message || "Failed to send email.",
+    });
   }
 });
 
