@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Contact Biloela Waste & Recycling." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../CSS/index.css" />
+    <link rel="stylesheet" type="text/css" href="../CSS/contact us.css" />
+    <title>Contact Us</title>
+  </head>
+  <body>
+    <header class="top-banner">
+      <div class="banner-left-img">
+        <img src="../Images/Logo.webp" alt="Biloela Plumbing Works Logo" />
+      </div>
+      <div>
+        <a href="index.html" class="persistent-link"><span>Home</span></a>
+        <a href="waste hook bins.html" class="persistent-link"
+          ><span>Waste Hook Bins</span></a
+        >
+        <a href="recyclable.html" class="persistent-link"
+          ><span>Recyclables</span></a
+        >
+        <a href="prohibited waste types.html" class="persistent-link"
+          ><span>Prohibited Waste Types</span></a
+        >
+        <a href="contact us.html" class="persistent-link"
+          ><span>Contact Us</span></a
+        >
+      </div>
+    </header>
+
+    <main class="contact-container">
+      <h1>Contact Us</h1>
+
+      <div class="contact-grid">
+        <!-- Office Information & Map -->
+        <div class="office-info">
+          <h2>Office Information</h2>
+          <p><strong>Address:</strong><br />17 Dunn St, Biloela QLD 4715</p>
+          <p><strong> Post Box:</strong><br />PO Box 1082, Biloela Qld 4715</p>
+          <p>
+            <strong>Email:</strong><br /><a
+              href="mailto:admin@bwrecycling.com.au"
+              style="color: #4a0638; text-decoration: none"
+              >admin@bwrecycling.com.au</a
+            >
+          </p>
+          <p><strong>Phone:</strong><br />(07) 4992 6782</p>
+          <p><strong>Office Hours:</strong><br />9:00 - 17:00 Mon-Fri</p>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+          <iframe
+            src="https://maps.google.com/maps?q=17%20Dunn%20St,%20Biloela&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            allowfullscreen=""
+            loading="lazy"
+          ></iframe>
+        </div>
+
+        <!-- Enquiry Form -->
+        <div class="enquiry-form">
+          <h2>Send an Enquiry</h2>
+          <form id="contactForm">
+            <div class="form-group">
+              <input
+                type="text"
+                id="name"
+                name="Name"
+                placeholder="Name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <input
+                type="tel"
+                id="phone"
+                name="Phone"
+                placeholder="Phone"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <input
+                type="email"
+                id="email"
+                name="Email"
+                placeholder="Email Address"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <textarea
+                id="message"
+                name="Message"
+                rows="6"
+                placeholder="Message"
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Contact Us</button>
+            <div
+              id="form-response"
+              style="display: none; margin-top: 15px; font-weight: bold"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault(); // Prevent standard page reload
+
+          const form = e.target;
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          const responseDiv = document.getElementById("form-response");
+
+          // Reset message
+          responseDiv.style.display = "none";
+
+          try {
+            const res = await fetch("/submit-form", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            if (res.ok) {
+              responseDiv.style.color = "green";
+              responseDiv.textContent =
+                "Thank you! Your message has been sent.";
+              responseDiv.style.display = "block";
+              form.reset(); // Clear the form fields
+            } else {
+              throw new Error("Server error");
+            }
+          } catch (error) {
+            responseDiv.style.color = "red";
+            responseDiv.textContent =
+              "Oops! Something went wrong. Please try again later.";
+            responseDiv.style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>
