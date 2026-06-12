@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, "HTML")));
 
 // Default route to serve the homepage
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "HTML", "index.html"));
+  res.sendFile(path.join(__dirname, "HTML", "Index.html"));
 });
 
 // Handle Contact Form Submission
@@ -27,18 +27,18 @@ app.post("/submit-form", async (req, res) => {
 
   // Set up Nodemailer transporter (Replace with your actual email SMTP credentials)
   const transporter = nodemailer.createTransport({
-    host: "smtp.example.com", // e.g., smtp.gmail.com or your web host's SMTP
+    host: "mail.bwrecycling.com.au", // Replace with your actual SMTP host (e.g., smtp.office365.com, smtp.gmail.com, or mail.bwrecycling.com.au)
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "your-email@example.com", // Your sending email address
-      pass: "your-email-password", // Your email password or app password
+      user: "admin@bwrecycling.com.au", // Your sending email address
+      pass: "YOUR_EMAIL_PASSWORD", // Your email password or app password
     },
   });
 
   try {
     await transporter.sendMail({
-      from: `"Website Contact Form" <your-email@example.com>`, // Sender address
+      from: `"Website Contact Form" <admin@bwrecycling.com.au>`, // Sender address
       to: "admin@bwrecycling.com.au", // Where you want to receive the inquiries
       subject: `New Enquiry from ${Name}`,
       text: `Name: ${Name}\nPhone: ${Phone}\nEmail: ${Email}\n\nMessage:\n${Message}`,
@@ -52,6 +52,6 @@ app.post("/submit-form", async (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);
 });
