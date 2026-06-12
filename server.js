@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const nodemailer = require("nodemailer");
@@ -32,7 +33,7 @@ app.post("/submit-form", async (req, res) => {
     secure: false, // true for 465, false for other ports
     auth: {
       user: "admin@bwrecycling.com.au", // Your sending email address
-      pass: "YOUR_EMAIL_PASSWORD", // Your email password or app password
+      pass: process.env.EMAIL_PASSWORD, // Loaded securely from your .env file
     },
   });
 
