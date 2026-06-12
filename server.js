@@ -36,7 +36,8 @@ app.get("/", (req, res) => {
 app.get(
   ["/biloela waste and recycling.html", "/biloela-waste-and-recycling.html"],
   (req, res) => {
-    res.redirect(301, "/");
+    // Redirect explicitly to the new domain name
+    res.redirect(301, "https://www.bwrecycling.com.au/");
   },
 );
 
