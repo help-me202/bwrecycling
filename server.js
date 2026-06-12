@@ -24,12 +24,12 @@ app.get("/", (req, res) => {
 
 // Set up Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  host: "mail.biloelaplumbingworks.com", // Replace with your actual SMTP host
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT || 587,
+  secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
   auth: {
-    user: "admin@biloelaplumbingworks.com", // Your sending email address
-    pass: process.env.EMAIL_PASSWORD, // Loaded securely from your .env file
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
   tls: {
     rejectUnauthorized: false, // Helps avoid self-signed certificate errors on custom mail servers
@@ -51,8 +51,8 @@ app.post("/submit-form", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: `"Website Contact Form" <admin@biloelaplumbingworks.com>`, // Sender address
-      to: "admin@biloelaplumbingworks.com", // Where you want to receive the inquiries
+      from: `"Website Contact Form" <${process.env.EMAIL_USER}>`, // Sender address
+      to: process.env.EMAIL_USER, // Where you want to receive the inquiries
       subject: `New Enquiry from ${Name}`,
       text: `Name: ${Name}\nPhone: ${Phone}\nEmail: ${Email}\n\nMessage:\n${Message}`,
     });
