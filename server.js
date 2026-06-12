@@ -22,25 +22,37 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "HTML", "Index.html"));
 });
 
+// Set up Nodemailer transporter
+const transporter = nodemailer.createTransport({
+  host: "mail.biloelaplumbingworks.com", // Replace with your actual SMTP host
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: "admin@biloelaplumbingworks.com", // Your sending email address
+    pass: process.env.EMAIL_PASSWORD, // Loaded securely from your .env file
+  },
+  tls: {
+    rejectUnauthorized: false, // Helps avoid self-signed certificate errors on custom mail servers
+  },
+});
+
+// Verify connection configuration on startup
+transporter.verify(function (error, success) {
+  if (error) {
+    console.error("SMTP Connection Error:", error);
+  } else {
+    console.log("Mail server is verified and ready to take messages.");
+  }
+});
+
 // Handle Contact Form Submission
 app.post("/submit-form", async (req, res) => {
   const { Name, Phone, Email, Message } = req.body;
 
-  // Set up Nodemailer transporter (Replace with your actual email SMTP credentials)
-  const transporter = nodemailer.createTransport({
-    host: "mail.bwrecycling.com.au", // Replace with your actual SMTP host (e.g., smtp.office365.com, smtp.gmail.com, or mail.bwrecycling.com.au)
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "admin@bwrecycling.com.au", // Your sending email address
-      pass: process.env.EMAIL_PASSWORD, // Loaded securely from your .env file
-    },
-  });
-
   try {
     await transporter.sendMail({
-      from: `"Website Contact Form" <admin@bwrecycling.com.au>`, // Sender address
-      to: "admin@bwrecycling.com.au", // Where you want to receive the inquiries
+      from: `"Website Contact Form" <admin@biloelaplumbingworks.com>`, // Sender address
+      to: "admin@biloelaplumbingworks.com", // Where you want to receive the inquiries
       subject: `New Enquiry from ${Name}`,
       text: `Name: ${Name}\nPhone: ${Phone}\nEmail: ${Email}\n\nMessage:\n${Message}`,
     });
