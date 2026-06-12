@@ -27,13 +27,21 @@ app.use(
 app.use("/CSS", express.static(path.join(__dirname, "CSS")));
 app.use("/Images", express.static(path.join(__dirname, "Images")));
 
-// Serve HTML files directly
-app.use(express.static(path.join(__dirname, "HTML")));
-
 // Default route to serve the homepage
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "HTML", "Index.html"));
+  res.sendFile(path.join(__dirname, "HTML", "index.html"));
 });
+
+// Redirect legacy or alternate homepage URLs to the canonical homepage
+app.get(
+  ["/biloela waste and recycling.html", "/biloela-waste-and-recycling.html"],
+  (req, res) => {
+    res.redirect(301, "/");
+  },
+);
+
+// Serve HTML files directly (must come after specific routes)
+app.use(express.static(path.join(__dirname, "HTML")));
 
 // Set up Nodemailer transporter
 const transporter = nodemailer.createTransport({
