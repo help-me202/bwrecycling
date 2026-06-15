@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
-const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,31 +43,6 @@ app.get(
 // Serve HTML files directly (must come after specific routes)
 app.use(express.static(path.join(__dirname, "HTML")));
 
-// Set up Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT || 587,
-  secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false, // Helps avoid self-signed certificate errors on custom mail servers
-  },
-});
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@biloelaplumbingworks.com";
-
-// Verify connection configuration on startup
-transporter.verify(function (error, success) {
-  if (error) {
-    console.error("SMTP Connection Error:", error);
-  } else {
-    console.log("Mail server is verified and ready to take messages.");
-  }
-});
-
 // Handle Contact Form Submission
 app.post("/submit-form", async (req, res) => {
   if (!req.body || Object.keys(req.body).length === 0) {
@@ -89,22 +63,7 @@ app.post("/submit-form", async (req, res) => {
     rawBody: req.rawBody,
   });
 
-  try {
-    await transporter.sendMail({
-      from: `"Website Contact Form" <${process.env.EMAIL_USER}>`, // Sender address
-      to: ADMIN_EMAIL, // Send enquiries to the admin address
-      replyTo: Email,
-      subject: `New Enquiry from ${Name}`,
-      text: `Name: ${Name}\nPhone: ${Phone}\nEmail: ${Email}\n\nMessage:\n${Message}`,
-    });
-
-    res.status(200).json({ message: "Email sent successfully!" });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).json({
-      error: error.message || "Failed to send email.",
-    });
-  }
+  res.status(200).json({ message: "Form submission received successfully!" });
 });
 
 // Start the server
