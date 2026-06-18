@@ -69,6 +69,15 @@
         <div class="enquiry-form">
           <h2>Send an Enquiry</h2>
           <form id="contactForm" spellcheck="false" autocomplete="off">
+            <input
+              type="text"
+              name="website"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+              style="position: absolute; left: -9999px"
+            />
+
             <div class="form-group">
               <input
                 type="text"
@@ -133,6 +142,37 @@
 
     <script>
       const responseDiv = document.getElementById("form-response");
+      let csrfToken = "";
+
+      async function ensureCsrfToken() {
+        if (csrfToken) {
+          return csrfToken;
+        }
+
+        const tokenResponse = await fetch("/api/csrf-token", {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store",
+        });
+
+        if (!tokenResponse.ok) {
+          throw new Error("Unable to initialize secure form session.");
+        }
+
+        const tokenPayload = await tokenResponse.json();
+        csrfToken = tokenPayload?.csrfToken || "";
+
+        if (!csrfToken) {
+          throw new Error("Missing CSRF token.");
+        }
+
+        return csrfToken;
+      }
+
+      ensureCsrfToken().catch((error) => {
+        console.error("CSRF initialization error:", error);
+      });
+
       if (window.location.protocol === "file:") {
         responseDiv.style.display = "block";
         responseDiv.style.color = "orange";
@@ -153,9 +193,14 @@
           responseDiv.style.display = "none";
 
           try {
+            const token = await ensureCsrfToken();
             const res = await fetch("/submit-form", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token,
+              },
+              credentials: "same-origin",
               body: JSON.stringify(data),
             });
 
