@@ -92,3 +92,24 @@ body {
   text-decoration-thickness: 3px;
   text-underline-offset: 6px;
 }
+
+.about-us-cta {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-left: 4px solid #4a0638;
+  background-color: #f6eff4;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.about-us-cta-link {
+  color: #4a0638;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  word-break: break-word;
+}
+
+.about-us-cta-link:hover {
+  color: #2f0324;
+}
