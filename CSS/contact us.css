@@ -119,3 +119,19 @@
         grid-template-columns: 1fr;
     }
 }
+
+.contact-email-link {
+    color: #4a0638;
+    text-decoration: none;
+}
+
+.visually-hidden-honeypot {
+    position: absolute;
+    left: -9999px;
+}
+
+#form-response {
+    display: none;
+    margin-top: 15px;
+    font-weight: bold;
+}
