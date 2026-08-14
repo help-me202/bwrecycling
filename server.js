@@ -223,6 +223,7 @@ app.get(
 
 // Serve HTML files directly (must come after specific routes)
 app.use(express.static(path.join(__dirname, "HTML")));
+app.use("/HTML", express.static(path.join(__dirname, "HTML")));
 
 app.get("/api/csrf-token", (req, res) => {
   const csrfToken = crypto.randomBytes(32).toString("hex");
@@ -331,13 +332,38 @@ app.post("/submit-form", async (req, res) => {
   ].join("\n");
 
   const htmlBody = `
-    <p>A new enquiry has been submitted via the website contact form.</p>
-    <p><strong>Name:</strong> ${escapedName}<br>
-    <strong>Phone:</strong> ${escapedPhone}<br>
-    <strong>Email:</strong> ${escapedEmail}</p>
-    <p><strong>Message:</strong><br>${escapedMessage.replace(/\n/g, "<br>")}</p>
-    <p><strong>Request ID:</strong> ${escapeHtml(requestId)}<br>
-    <strong>IP:</strong> ${escapeHtml(clientIp)}</p>
+    <div style="background-color:#f5f5f5;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#333333;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:640px;margin:0 auto;border-collapse:separate;border-spacing:0;">
+        <tr>
+          <td>
+            <div style="background-color:#4a0638;color:#ffffff;padding:20px 24px;border-radius:8px 8px 0 0;">
+              <div style="font-size:24px;font-weight:bold;letter-spacing:0.04em;">Biloela Waste & Recycling</div>
+            </div>
+            <div style="background-color:#ffffff;border:1px solid #e8e8e8;border-top:none;border-radius:0 0 8px 8px;padding:28px 24px;line-height:1.7;">
+              <p style="margin:0 0 20px;font-size:16px;color:#333333;">
+                A new enquiry has been submitted via the website contact form.
+              </p>
+
+              <p style="margin:0 0 12px;">
+                <strong style="color:#4a0638;">Name:</strong> ${escapedName}<br>
+                <strong style="color:#4a0638;">Phone:</strong> ${escapedPhone}<br>
+                <strong style="color:#4a0638;">Email:</strong> ${escapedEmail}
+              </p>
+
+              <div style="margin-top:18px;">
+                <div style="color:#4a0638;font-weight:bold;margin-bottom:8px;">Message:</div>
+                <div style="background-color:#f9f2f7;border-left:4px solid #4a0638;border-radius:4px;padding:16px 18px;color:#333333;white-space:pre-wrap;">${escapedMessage.replace(/\n/g, "<br>")}</div>
+              </div>
+
+              <p style="margin:20px 0 0;font-size:12px;color:#555555;line-height:1.6;">
+                <strong>Request ID:</strong> ${escapeHtml(requestId)}<br>
+                <strong>IP:</strong> ${escapeHtml(clientIp)}
+              </p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
   `;
 
   try {
