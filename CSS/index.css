@@ -8,6 +8,16 @@ body {
 
 .site-footer {
   margin-top: auto;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #cccccc;
+  background-color: #f5f5f5;
+  color: #333333;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 .top-banner {
