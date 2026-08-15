@@ -244,11 +244,13 @@ app.post("/submit-form", async (req, res) => {
   const clientIp = req.ip || req.socket.remoteAddress || "unknown";
   const requestOrigin = getRequestOrigin(req);
 
-  if (REQUIRE_ORIGIN_CHECK && !requestOrigin) {
-    return res.status(403).json({ error: "Forbidden request origin." });
-  }
+  // Allow localhost requests even without explicit origin header
+  const isLocalhost =
+    clientIp === "127.0.0.1" || clientIp === "::1" || clientIp === "localhost";
+  const originIsAllowed =
+    !requestOrigin || allowedOrigins.has(requestOrigin) || isLocalhost;
 
-  if (REQUIRE_ORIGIN_CHECK && !allowedOrigins.has(requestOrigin)) {
+  if (REQUIRE_ORIGIN_CHECK && !originIsAllowed && requestOrigin) {
     return res.status(403).json({ error: "Origin not allowed." });
   }
 
