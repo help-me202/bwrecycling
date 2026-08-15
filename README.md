@@ -1,13 +1,10 @@
 # bwrecycling
 
-## Secure SMTP Contact Form Setup
+## Resend Contact Form Setup
 
-The backend sends contact form submissions using SMTP with hardened defaults:
+The backend sends contact form submissions using the Resend API:
 
-- TLS required (`requireTLS: true`)
-- Minimum TLS version set to `TLSv1.2`
-- Certificate validation enabled by default
-- File and URL access disabled in Nodemailer transport
+- API-based delivery, suitable for Vercel serverless hosting
 - Basic request rate limiting on the contact endpoint
 - Honeypot trap support (`website` field)
 - CSRF token protection using a cookie + request header match
@@ -19,21 +16,14 @@ The backend sends contact form submissions using SMTP with hardened defaults:
 Configure these values in your `.env` file:
 
 - `PORT`
-- `SMTP_HOST`
-- `SMTP_PORT` (usually `465` for SMTPS or `587` for STARTTLS)
-- `SMTP_SECURE` (`true` for SMTPS on port 465)
-- `SMTP_USER`
-- `SMTP_PASS`
-- `SMTP_FROM`
+- `RESEND_API_KEY`
 - `CONTACT_FORM_TO`
-- `SMTP_REJECT_UNAUTHORIZED` (optional, defaults to `true`)
-- `SMTP_TLS_SERVERNAME` (optional)
 - `ALLOWED_ORIGINS` (optional, comma-separated list; defaults include production + localhost)
 - `REQUIRE_ORIGIN_CHECK` (optional, defaults to `true`)
 - `CSRF_COOKIE_SECURE` (optional, force `Secure` cookie flag)
 - `TRUST_PROXY` (optional, set to `true` when running behind a reverse proxy)
 
-If SMTP variables are missing, the server will still run but the form endpoint will return `503` until SMTP is configured.
+If the Resend variables are missing, the server will still run but the form endpoint will return `503` until email delivery is configured.
 
 ### CSRF Handshake
 
