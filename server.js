@@ -1,7 +1,7 @@
 require("dotenv").config();
 const crypto = require("crypto");
 const express = require("express");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const path = require("path");
 
 const app = express();
@@ -25,59 +25,17 @@ const allowedOrigins = new Set(
     .filter(Boolean),
 );
 
-const requiredSmtpVars = [
-  "SMTP_HOST",
-  "SMTP_USER",
-  "SMTP_PASS",
-  "SMTP_FROM",
-  "CONTACT_FORM_TO",
-];
+const requiredEmailVars = ["RESEND_API_KEY", "CONTACT_FORM_TO"];
 
-const missingSmtpVars = requiredSmtpVars.filter((key) => !process.env[key]);
+const missingEmailVars = requiredEmailVars.filter((key) => !process.env[key]);
 
-let mailTransporter = null;
-if (missingSmtpVars.length === 0) {
-  const smtpPort = Number(process.env.SMTP_PORT || 465);
-  const secureSmtp =
-    typeof process.env.SMTP_SECURE === "string"
-      ? process.env.SMTP_SECURE.toLowerCase() === "true"
-      : smtpPort === 465;
-
-  mailTransporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: smtpPort,
-    secure: secureSmtp,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-    requireTLS: true,
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
-    pool: true,
-    maxConnections: 3,
-    maxMessages: 50,
-    disableFileAccess: true,
-    disableUrlAccess: true,
-    tls: {
-      minVersion: "TLSv1.2",
-      rejectUnauthorized: process.env.SMTP_REJECT_UNAUTHORIZED !== "false",
-      servername: process.env.SMTP_TLS_SERVERNAME || process.env.SMTP_HOST,
-    },
-  });
-
-  mailTransporter
-    .verify()
-    .then(() => {
-      console.log("SMTP transporter verified and ready.");
-    })
-    .catch((error) => {
-      console.error("SMTP verify failed:", error.message);
-    });
+let resendClient = null;
+if (missingEmailVars.length === 0) {
+  resendClient = new Resend(process.env.RESEND_API_KEY);
+  console.log("Resend email service initialized and ready.");
 } else {
   console.error(
-    `SMTP is disabled. Missing env vars: ${missingSmtpVars.join(", ")}`,
+    `Resend is disabled. Missing env vars: ${missingEmailVars.join(", ")}`,
   );
 }
 
@@ -274,8 +232,8 @@ app.post("/submit-form", async (req, res) => {
     });
   }
 
-  if (!mailTransporter) {
-    console.error(`[${requestId}] SMTP unavailable.`);
+  if (!resendClient) {
+    console.error(`[${requestId}] Resend email service unavailable.`);
     return res.status(503).json({
       error: "Service temporarily unavailable. Please try again later.",
     });
@@ -369,17 +327,12 @@ app.post("/submit-form", async (req, res) => {
   `;
 
   try {
-    await mailTransporter.sendMail({
-      from: process.env.SMTP_FROM,
+    await resendClient.emails.send({
+      from: "onboarding@resend.dev",
       to: process.env.CONTACT_FORM_TO,
       replyTo: safeEmail,
       subject,
-      text: textBody,
       html: htmlBody,
-      headers: {
-        "X-Contact-Source": "bwrecycling-web-form",
-        "X-Request-ID": requestId,
-      },
     });
   } catch (error) {
     console.error(
