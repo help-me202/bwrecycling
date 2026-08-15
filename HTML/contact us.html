@@ -122,7 +122,12 @@
               ></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">Contact Us</button>
+            <div class="form-submit-container">
+              <button type="submit" class="submit-btn" id="submitBtn">
+                Contact Us
+              </button>
+              <div class="loading-spinner" id="loadingSpinner"></div>
+            </div>
             <div
               id="form-response"
               style="display: none; margin-top: 15px; font-weight: bold"
@@ -184,8 +189,16 @@
           const formData = new FormData(form);
           const data = Object.fromEntries(formData.entries());
 
+          // Get spinner and button elements
+          const submitBtn = document.getElementById("submitBtn");
+          const loadingSpinner = document.getElementById("loadingSpinner");
+
           // Reset message
           responseDiv.style.display = "none";
+
+          // Show spinner and disable button
+          loadingSpinner.style.display = "block";
+          submitBtn.disabled = true;
 
           try {
             const token = await ensureCsrfToken();
@@ -223,6 +236,10 @@
             responseDiv.style.color = "red";
             responseDiv.textContent = `Oops! Something went wrong. ${error.message}`;
             responseDiv.style.display = "block";
+          } finally {
+            // Hide spinner and re-enable button
+            loadingSpinner.style.display = "none";
+            submitBtn.disabled = false;
           }
         });
     </script>
